@@ -13,7 +13,7 @@ app.use(bodyParser())
 
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
-app.use('testing/all-ata', testingRouter)
+app.use('/testing/all-data', testingRouter)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

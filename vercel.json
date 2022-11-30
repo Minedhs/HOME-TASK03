@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "express-vercel",
+  "name": "HOME-TASK02",
   "builds": [
     { "src": "src/index.ts", "use": "@vercel/node"}
   ],
