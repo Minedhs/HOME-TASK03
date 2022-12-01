@@ -23,7 +23,7 @@ export const postsRepository = {
         const blog = blogsRepository.findBlogById(blogId)
         if (!blog) {
             return false
-        }
+        } else {
         const newPost = {
             id: (+(new Date())).toString(),
             title: title,
@@ -34,6 +34,7 @@ export const postsRepository = {
         }
         posts.push(newPost)
         return newPost
+        }
     },
     updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
         const blog = blogsRepository.findBlogById(blogId)

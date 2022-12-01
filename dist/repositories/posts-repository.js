@@ -16,16 +16,18 @@ exports.postsRepository = {
         if (!blog) {
             return false;
         }
-        const newPost = {
-            id: (+(new Date())).toString(),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            blogId: blogId,
-            blogName: blog.name
-        };
-        posts.push(newPost);
-        return newPost;
+        else {
+            const newPost = {
+                id: (+(new Date())).toString(),
+                title: title,
+                shortDescription: shortDescription,
+                content: content,
+                blogId: blogId,
+                blogName: blog.name
+            };
+            posts.push(newPost);
+            return newPost;
+        }
     },
     updatePost(id, title, shortDescription, content, blogId) {
         const blog = blogs_repository_1.blogsRepository.findBlogById(blogId);

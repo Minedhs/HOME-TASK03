@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.inputValidationMiddleware = exports.blogIdValidation = exports.contentValidation = exports.shortDescriptionValidation = exports.titleValidation = exports.webSiteUrlValidation = exports.descriptionValidation = exports.nameValidation = void 0;
 const express_validator_1 = require("express-validator");
+const blogs_repository_1 = require("../repositories/blogs-repository");
 exports.nameValidation = (0, express_validator_1.body)('name')
     .isString().withMessage('name should be string')
     .trim().withMessage('name should be symbols string')
@@ -36,7 +37,14 @@ exports.contentValidation = (0, express_validator_1.body)('content')
 exports.blogIdValidation = (0, express_validator_1.body)('blogId')
     .isString().withMessage('blogId should be string')
     .trim().withMessage('blogId should be symbols string')
-    .notEmpty().withMessage('blogId is required');
+    .notEmpty().withMessage('blogId is required')
+    .custom((blogId) => {
+    const findBlogId = blogs_repository_1.blogsRepository.findBlogById(blogId);
+    if (findBlogId) {
+        return true;
+    }
+    else { }
+}).withMessage('blogId is incorrect');
 const inputValidationMiddleware = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
