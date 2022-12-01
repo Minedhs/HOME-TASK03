@@ -42,7 +42,12 @@ export const blogIdValidation = body('blogId')
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        res.status(400).json({errors: errors.array()})
+        res.status(400).json({
+            errorsMessages: errors.array({onlyFirstError:true}).map(e => ({
+                message: e.msg,
+                field: e.param
+            }))
+        });
     } else {
         next()
     }

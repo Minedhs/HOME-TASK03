@@ -1,10 +1,12 @@
+import {blogsRepository} from "./blogs-repository";
+
 type postType = {
     id: string,
     title: string,
     shortDescription: string,
     content: string,
     blogId: string,
-    blogName?: string
+    blogName: string
 }
 
 const posts: postType[] = []
@@ -17,26 +19,34 @@ export const postsRepository = {
         let post = posts.find(p => p.id === id)
         return post
     },
-    createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
+    createPost(title: string, shortDescription: string, content: string, blogId: string) {
+        const blog = blogsRepository.findBlogById(blogId)
+        if (!blog) {
+            return false
+        }
         const newPost = {
             id: (+(new Date())).toString(),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blogName
+            blogName: blog.name
         }
         posts.push(newPost)
         return newPost
     },
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
+    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
+        const blog = blogsRepository.findBlogById(blogId)
+        if (!blog) {
+            return false
+        }
         let post = posts.find(p => p.id === id)
         if (post) {
             post.title = title;
             post.shortDescription = shortDescription;
             post.content = content;
             post.blogId = blogId;
-            post.blogName = blogName;
+            post.blogName = blog.name;
             return true;
         } else {
             return false;

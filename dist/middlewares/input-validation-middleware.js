@@ -40,7 +40,12 @@ exports.blogIdValidation = (0, express_validator_1.body)('blogId')
 const inputValidationMiddleware = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
+        res.status(400).json({
+            errorsMessages: errors.array({ onlyFirstError: true }).map(e => ({
+                message: e.msg,
+                field: e.param
+            }))
+        });
     }
     else {
         next();

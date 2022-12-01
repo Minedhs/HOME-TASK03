@@ -10,7 +10,7 @@ exports.postsRouter.get('/', (req, res) => {
     res.status(200).send(posts_repository_1.postsRepository.findPosts());
 });
 exports.postsRouter.post('/', authorization_middleware_1.basicAuthorizationMiddleware, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, input_validation_middleware_1.blogIdValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
-    const newPost = posts_repository_1.postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.body.blogName);
+    const newPost = posts_repository_1.postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     if (newPost) {
         res.status(201).send(newPost);
     }
@@ -35,7 +35,7 @@ exports.postsRouter.delete('/:id', authorization_middleware_1.basicAuthorization
     }
 });
 exports.postsRouter.put('/:id', authorization_middleware_1.basicAuthorizationMiddleware, input_validation_middleware_1.titleValidation, input_validation_middleware_1.shortDescriptionValidation, input_validation_middleware_1.contentValidation, input_validation_middleware_1.blogIdValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
-    const isUpdated = posts_repository_1.postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.body.blogName);
+    const isUpdated = posts_repository_1.postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     if (!isUpdated) {
         res.sendStatus(404);
     }

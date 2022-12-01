@@ -8,6 +8,7 @@ import {
     inputValidationMiddleware
 } from "../middlewares/input-validation-middleware";
 import {basicAuthorizationMiddleware} from "../middlewares/authorization-middleware";
+import {blogsRepository} from "../repositories/blogs-repository";
 
 
 export const postsRouter = Router()
@@ -16,7 +17,7 @@ postsRouter.get('/',(req: Request, res: Response) => {
     res.status(200).send(postsRepository.findPosts())
 })
 postsRouter.post('/', basicAuthorizationMiddleware, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
-    const newPost = postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.body.blogName)
+    const newPost = postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
     if (newPost) {
         res.status(201).send(newPost)
     }
@@ -39,7 +40,7 @@ postsRouter.delete('/:id', basicAuthorizationMiddleware, (req: Request, res: Res
     }
 })
 postsRouter.put('/:id', basicAuthorizationMiddleware, titleValidation, shortDescriptionValidation, contentValidation, blogIdValidation, inputValidationMiddleware, (req: Request, res: Response) => {
-    const isUpdated = postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId, req.body.blogName)
+    const isUpdated = postsRepository.updatePost(req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
     if (!isUpdated) {
         res.sendStatus(404)
     } else {
