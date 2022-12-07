@@ -50,7 +50,7 @@ exports.postsRepository = {
                     content: content,
                     blogId: blogId,
                     blogName: getBlog.name,
-                    createdAt: new Date().toString()
+                    createdAt: new Date().toISOString()
                 };
                 yield db_1.postsCollection.insertOne(newPost);
                 return {

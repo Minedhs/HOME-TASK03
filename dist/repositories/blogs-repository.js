@@ -43,7 +43,7 @@ exports.blogsRepository = {
                 name: name,
                 description: description,
                 websiteUrl: websiteUrl,
-                createdAt: new Date().toString()
+                createdAt: new Date().toISOString()
             };
             yield db_1.blogsCollection.insertOne(newBlog);
             return {

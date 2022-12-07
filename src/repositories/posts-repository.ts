@@ -1,4 +1,4 @@
-import {blogsCollection, PostDBType, postsCollection, PostType} from "./db";
+import {PostDBType, postsCollection, PostType} from "./db";
 import {blogsRepository} from "./blogs-repository";
 import {ObjectId} from "mongodb";
 
@@ -33,7 +33,7 @@ export const postsRepository = {
             content: content,
             blogId: blogId,
             blogName: getBlog.name,
-            createdAt: new Date().toString()
+            createdAt: new Date().toISOString()
         }
         await postsCollection.insertOne(newPost)
         return {
