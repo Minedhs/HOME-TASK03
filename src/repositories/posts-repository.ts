@@ -7,6 +7,7 @@ export const postsRepository = {
         let posts = await postsCollection.find().toArray();
         return posts.map((c) => {return {id: c._id, title: c.title, shortDescription: c.shortDescription, content: c.content, blogId: c.blogId, blogName: c.blogName, createdAt: c.createdAt}})
     },
+
     async findPostById(id: string): Promise<PostType | null> {
         let post: PostDBType | null = await postsCollection.findOne({_id: new ObjectId(id)})
         if (post) {
