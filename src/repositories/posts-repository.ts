@@ -1,65 +1,60 @@
+import {blogsCollection, PostDBType, postsCollection, PostType} from "./db";
 import {blogsRepository} from "./blogs-repository";
-
-type postType = {
-    id: string,
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: string,
-    blogName: string
-}
-
-const posts: postType[] = []
+import {ObjectId} from "mongodb";
 
 export const postsRepository = {
-    findPosts () {
-        return posts
+    async findPosts () {
+        let posts = await postsCollection.find().toArray();
+        return posts.map((c) => {return {id: c._id, title: c.title, shortDescription: c.shortDescription, content: c.content, blogId: c.blogId, blogName: c.blogName, createdAt: c.createdAt}})
     },
-    findPostById(id: string) {
-        let post = posts.find(p => p.id === id)
-        return post
-    },
-    createPost(title: string, shortDescription: string, content: string, blogId: string) {
-        const blog = blogsRepository.findBlogById(blogId)
-        if (!blog) {
-            return false
+    async findPostById(id: string): Promise<PostType | null> {
+        let post: PostDBType | null = await postsCollection.findOne({_id: new ObjectId(id)})
+        if (post) {
+            return {
+                id: post._id.toString(),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: post.createdAt
+            }
         } else {
-        const newPost = {
-            id: (+(new Date())).toString(),
+            return null
+        }
+    },
+    async createPost(title: string, shortDescription: string, content: string, blogId: string) {
+        const getBlog = await blogsRepository.findBlogById(blogId)
+        if (getBlog) {
+        const newPost: PostDBType = {
+            _id: new ObjectId(),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blog.name
+            blogName: getBlog.name,
+            createdAt: new Date().toString()
         }
-        posts.push(newPost)
-        return newPost
-        }
-    },
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        const blog = blogsRepository.findBlogById(blogId)
-        if (!blog) {
-            return false
-        }
-        let post = posts.find(p => p.id === id)
-        if (post) {
-            post.title = title;
-            post.shortDescription = shortDescription;
-            post.content = content;
-            post.blogId = blogId;
-            post.blogName = blog.name;
-            return true;
-        } else {
-            return false;
-        }
-    },
-    deletePost(id: string) {
-        for (let i = 0; i < posts.length; i++) {
-            if (posts[i].id === id) {
-                posts.splice(i, 1);
-                return true;
+        await postsCollection.insertOne(newPost)
+        return {
+            id: newPost._id.toString(),
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            blogId: newPost.blogId,
+            blogName: newPost.blogName,
+            createdAt: newPost.createdAt
             }
-        }
-        return false;
+            }
+        },
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
+        const getBlog = await blogsRepository.findBlogById(blogId)
+        if (getBlog) {
+        const result = await postsCollection.updateOne({_id: new ObjectId(id)}, {$set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId, blogName: getBlog.name}})
+            return result.matchedCount === 1;
+        }},
+    async deletePost(id: string): Promise<boolean> {
+        const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
+        return result.deletedCount === 1
     }
-}
+    }
