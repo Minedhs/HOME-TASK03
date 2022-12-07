@@ -69,5 +69,4 @@ const inputValidationMiddleware = (req, res, next) => {
     }
 };
 
-
 exports.inputValidationMiddleware = inputValidationMiddleware;
