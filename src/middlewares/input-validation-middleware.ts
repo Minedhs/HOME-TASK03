@@ -39,8 +39,9 @@ export const blogIdValidation = body('blogId')
     .trim().withMessage('blogId should be symbols string')
     .notEmpty().withMessage('blogId is required')
     .custom ((blogId) => {
-        if (blogId === blogsRepository.findBlogById(blogId)) {
-           return true
+        const findBlogId = blogsRepository.findBlogById(blogId);
+        if (!findBlogId) {
+            return false
         }
     }).withMessage('blogId is incorrect');
 
