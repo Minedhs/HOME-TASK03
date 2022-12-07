@@ -54,6 +54,7 @@ export const postsRepository = {
         const result = await postsCollection.updateOne({_id: new ObjectId(id)}, {$set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId, blogName: getBlog.name}})
             return result.matchedCount === 1;
         }},
+
     async deletePost(id: string): Promise<boolean> {
         const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
