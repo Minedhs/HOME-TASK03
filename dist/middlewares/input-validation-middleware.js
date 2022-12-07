@@ -39,8 +39,9 @@ exports.blogIdValidation = (0, express_validator_1.body)('blogId')
     .trim().withMessage('blogId should be symbols string')
     .notEmpty().withMessage('blogId is required')
     .custom((blogId) => {
-    if (blogId === blogs_repository_1.blogsRepository.findBlogById(blogId)) {
-        return true;
+    const findBlogId = blogs_repository_1.blogsRepository.findBlogById(blogId);
+    if (!findBlogId) {
+        return false;
     }
 }).withMessage('blogId is incorrect');
 const inputValidationMiddleware = (req, res, next) => {
