@@ -38,12 +38,10 @@ export const blogIdValidation = body('blogId')
     .isString().withMessage('blogId should be string')
     .trim().withMessage('blogId should be symbols string')
     .notEmpty().withMessage('blogId is required')
-    .custom ( (blogId) => {
-        const blog = blogsRepository.findBlogById(blogId);
+    .custom ( async (blogId) => {
+        const blog = await blogsRepository.findBlogById(blogId);
         if (!blog) {
-            return undefined
-        } else {
-            return blogId
+            return false
         }
     }).withMessage('blogId is incorrect')
 
