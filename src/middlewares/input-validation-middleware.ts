@@ -41,9 +41,10 @@ export const blogIdValidation = body('blogId')
     .custom ( async (blogId) => {
         const blog = await blogsRepository.findBlogById(blogId);
         if (!blog) {
-            return false
+            throw new Error('blogId is incorrect')
         }
-    }).withMessage('blogId is incorrect')
+        return true
+    })
 
 export const inputValidationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)

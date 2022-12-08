@@ -50,9 +50,10 @@ exports.blogIdValidation = (0, express_validator_1.body)('blogId')
     .custom((blogId) => __awaiter(void 0, void 0, void 0, function* () {
     const blog = yield blogs_repository_1.blogsRepository.findBlogById(blogId);
     if (!blog) {
-        return false;
+        throw new Error('blogId is incorrect');
     }
-})).withMessage('blogId is incorrect');
+    return true;
+}));
 const inputValidationMiddleware = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
