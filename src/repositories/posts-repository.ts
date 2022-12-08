@@ -1,4 +1,4 @@
-import {PostDBType, postsCollection, PostType} from "./db";
+import {PostDBType, postsCollection} from "./db";
 import {blogsRepository} from "./blogs-repository";
 import {ObjectId} from "mongodb";
 
@@ -7,10 +7,11 @@ export const postsRepository = {
         let posts = await postsCollection.find().toArray();
         return posts.map((c) => {return {id: c._id, title: c.title, shortDescription: c.shortDescription, content: c.content, blogId: c.blogId, blogName: c.blogName, createdAt: c.createdAt}})
     },
-
-    async findPostById(id: string): Promise<PostType | null> {
+    async findPostById(id: string) {
         let post: PostDBType | null = await postsCollection.findOne({_id: new ObjectId(id)})
-        if (post) {
+        if (!post) {
+            return null
+        } else {
             return {
                 id: post._id.toString(),
                 title: post.title,
@@ -20,14 +21,12 @@ export const postsRepository = {
                 blogName: post.blogName,
                 createdAt: post.createdAt
             }
-        } else {
-            return null
         }
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string) {
         const getBlog = await blogsRepository.findBlogById(blogId)
         if (getBlog) {
-        const newPost: PostDBType = {
+        const newPost = {
             _id: new ObjectId(),
             title: title,
             shortDescription: shortDescription,
@@ -52,10 +51,10 @@ export const postsRepository = {
         const getBlog = await blogsRepository.findBlogById(blogId)
         if (getBlog) {
         const result = await postsCollection.updateOne({_id: new ObjectId(id)}, {$set: {title: title, shortDescription: shortDescription, content: content, blogId: blogId, blogName: getBlog.name}})
-            return result.matchedCount === 1;
+        return result.matchedCount === 1;
         }},
 
-    async deletePost(id: string): Promise<boolean> {
+    async deletePost(id: string) {
         const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     }

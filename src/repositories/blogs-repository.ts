@@ -1,14 +1,16 @@
-import {BlogDBType, blogsCollection, BlogType} from "./db";
+import {blogsCollection, BlogType} from "./db";
 import {ObjectId} from "mongodb";
 
 export const blogsRepository = {
     async findBlogs () {
-        let blogs: BlogDBType[] = await blogsCollection.find().toArray();
+        let blogs = await blogsCollection.find().toArray();
         return blogs.map((c) => {return {id: c._id, name: c.name, description: c.description, websiteUrl: c.websiteUrl, createdAt: c.createdAt};});
     },
     async findBlogById(id: string) {
         let blog = await blogsCollection.findOne({_id: new ObjectId(id)});
-        if (blog) {
+        if (!blog) {
+            return null
+        } else {
             return {
                 id: blog._id.toString(),
                 name: blog.name,
@@ -16,12 +18,10 @@ export const blogsRepository = {
                 websiteUrl: blog.websiteUrl,
                 createdAt: blog.createdAt
             }
-        } else {
-            return null
         }
     },
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogType> {
-        const newBlog: BlogDBType = {
+        const newBlog = {
             _id: new ObjectId(),
             name: name,
             description: description,

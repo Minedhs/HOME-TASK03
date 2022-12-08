@@ -25,11 +25,11 @@ exports.postsRouter.post('/', authorization_middleware_1.basicAuthorizationMiddl
 }));
 exports.postsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let post = yield posts_repository_1.postsRepository.findPostById(req.params.id);
-    if (post) {
-        res.status(200).send(post);
+    if (!post) {
+        res.sendStatus(404);
     }
     else {
-        res.sendStatus(404);
+        res.status(200).send(post);
     }
 }));
 exports.postsRouter.delete('/:id', authorization_middleware_1.basicAuthorizationMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

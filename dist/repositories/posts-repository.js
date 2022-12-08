@@ -23,7 +23,10 @@ exports.postsRepository = {
     findPostById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let post = yield db_1.postsCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
-            if (post) {
+            if (!post) {
+                return null;
+            }
+            else {
                 return {
                     id: post._id.toString(),
                     title: post.title,
@@ -33,9 +36,6 @@ exports.postsRepository = {
                     blogName: post.blogName,
                     createdAt: post.createdAt
                 };
-            }
-            else {
-                return null;
             }
         });
     },

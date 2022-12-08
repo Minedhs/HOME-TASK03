@@ -22,7 +22,10 @@ exports.blogsRepository = {
     findBlogById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let blog = yield db_1.blogsCollection.findOne({ _id: new mongodb_1.ObjectId(id) });
-            if (blog) {
+            if (!blog) {
+                return null;
+            }
+            else {
                 return {
                     id: blog._id.toString(),
                     name: blog.name,
@@ -30,9 +33,6 @@ exports.blogsRepository = {
                     websiteUrl: blog.websiteUrl,
                     createdAt: blog.createdAt
                 };
-            }
-            else {
-                return null;
             }
         });
     },

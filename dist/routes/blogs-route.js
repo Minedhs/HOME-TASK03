@@ -25,11 +25,11 @@ exports.blogsRouter.post('/', authorization_middleware_1.basicAuthorizationMiddl
 }));
 exports.blogsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let blog = yield blogs_repository_1.blogsRepository.findBlogById(req.params.id);
-    if (blog) {
-        res.status(200).send(blog);
+    if (!blog) {
+        res.sendStatus(404);
     }
     else {
-        res.sendStatus(404);
+        res.status(200).send(blog);
     }
 }));
 exports.blogsRouter.delete('/:id', authorization_middleware_1.basicAuthorizationMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

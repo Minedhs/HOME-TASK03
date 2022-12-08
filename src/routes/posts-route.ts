@@ -20,14 +20,14 @@ postsRouter.post('/', basicAuthorizationMiddleware, titleValidation, shortDescri
     })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
     let post = await postsRepository.findPostById(req.params.id)
-    if (post) {
-        res.status(200).send(post)
-    } else {
+    if (!post) {
         res.sendStatus(404)
+    } else {
+        res.status(200).send(post)
     }
 })
 postsRouter.delete('/:id', basicAuthorizationMiddleware, async (req: Request, res: Response) => {
-    const isDeleted: boolean = await postsRepository.deletePost(req.params.id)
+    const isDeleted = await postsRepository.deletePost(req.params.id)
     if (isDeleted) {
         res.sendStatus(204)
     } else {
